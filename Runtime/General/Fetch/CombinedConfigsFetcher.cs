@@ -7,9 +7,10 @@
     using Core.Features;
     using Core.Version;
     using Cysharp.Threading.Tasks;
-    using Logs;
     using Newtonsoft.Json;
+    using UnityEngine;
     using Zenject;
+    using Logger = Logs.Logger;
 
     class CombinedConfigsFetcher : IConfigsFetcher
     {

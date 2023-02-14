@@ -8,7 +8,7 @@
 
     public class LocalVersionsRunCounter : IVersionRunsCounter
     {
-        private const string Key = "varsions.counter";
+        private const string Key = "local:versions.counter";
         
         private readonly IVersionProvider versionProvider;
 
@@ -20,6 +20,8 @@
         {
             this.versionProvider = versionProvider;
             this.serializer = serializer;
+            
+            RestoreCounter();
         }
 
         private void RestoreCounter()

@@ -4,10 +4,12 @@
     using Core;
     using Core.Services;
     using General;
+    using General.ABTests;
     using General.Application;
     using General.Fetch;
     using ResourcesService;
     using Saves.General.Fetch;
+    using UnityEngine;
 
     [Install]
     public class ConfigurationInstaller : ModuleInstaller
@@ -27,8 +29,12 @@
             services.Add<IConfigsRegistry>().ImplementedBy<ConfigsRegistry>().AsSingleton();
             services.Add<IConfigsFactory>().ImplementedBy<ConfigsFactory>().AsSingleton();
             services.Add<IAppliedConfigsHolder>().ImplementedBy<AppliedConfigsHolder>().AsSingleton();
-            services.Add<IVersionRunsCounter>().ImplementedBy<LocalVersionsRunCounter>().AsSingleton();
             services.Add<IConfigObjectCreator>().ImplementedBy<ConfigObjectResolverCreator>().AsSingleton();
+
+            // this is potentially rebindable part
+            services.Add<IVersionRunsCounter>().ImplementedBy<LocalVersionsRunCounter>().AsSingleton();
+            services.Add<IAppliedConfigsSaver>().ImplementedBy<LocalAppliedConfigsSaver>().AsSingleton();
+            services.Add<IABTestsReporter>().ImplementedBy<LogAbTestsReporter>().AsSingleton();
             
             var metas = configMetaProvider.FetchMetas();
             foreach (var meta in metas)

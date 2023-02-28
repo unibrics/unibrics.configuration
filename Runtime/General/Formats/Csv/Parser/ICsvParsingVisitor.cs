@@ -64,6 +64,7 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
                     Name = value,
                     Setter = GetSetterFor(property)
                 });
+                index++;
                 return;
             }
             
@@ -134,6 +135,8 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
                         // state was just switched from metadata
                         return;
                     }
+
+                    index = 0;
                     state = CsvParsingState.Values;
                     headers = headersTemp.ToArray();
                     return;

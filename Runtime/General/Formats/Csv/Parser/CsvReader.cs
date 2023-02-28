@@ -5,6 +5,7 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
     using System.IO;
     using System.Linq;
     using System.Text;
+    using UnityEngine;
 
     public class CsvReader
     {
@@ -73,7 +74,7 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
                 {
                     break;
                 }
-                
+
                 visitor.OnCellParsed(cell);
             }
             

@@ -31,7 +31,6 @@ namespace Unibrics.Configuration.General.Formats.Csv
         {
             using var reader = new StringReader(raw);
             var firstLine = reader.ReadLine();
-            Debug.Log($"line: {firstLine}");
             if (firstLine is not "metadata:")
             {
                 return;

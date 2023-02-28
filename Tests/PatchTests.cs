@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Cysharp.Threading.Tasks;
     using General;
+    using General.Formats.Json;
     using NUnit.Framework;
 
     [TestFixture]
@@ -16,7 +17,10 @@
         [SetUp]
         public void SetUp()
         {
-            factory = new ConfigsFactory(new ConfigsConfigurator(), new ActivatorConfigObjectsCreator());
+            factory = new ConfigsFactory(new ActivatorConfigObjectsCreator(), new MultiFormatConfigValuesInjector(new List<IFormattedConfigValuesInjector>()
+            {
+                new JsonConfigsInjector(new ConfigsConfigurator())
+            }));
         }
 
         [Test]

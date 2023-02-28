@@ -10,7 +10,7 @@ namespace Unibrics.Configuration.Tests
 
         public static string ProvideCsv() =>
             "sampleInt;sampleString;sampleFloat\n" +
-            "45;\"value\";2.45" +
+            "45;\"value\";2.45\n" +
             "34;\"value2\";2.75";
     }
 }

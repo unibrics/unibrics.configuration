@@ -14,14 +14,14 @@
 
     class ConfigsFactory : IConfigsFactory
     {
-        private readonly IConfigsConfigurator configurator;
-
         private readonly IConfigObjectCreator configObjectCreator;
+
+        private readonly IConfigValuesInjector valuesInjector;
         
-        public ConfigsFactory(IConfigsConfigurator configurator, IConfigObjectCreator configObjectCreator)
+        public ConfigsFactory(IConfigObjectCreator configObjectCreator, IConfigValuesInjector valuesInjector)
         {
-            this.configurator = configurator;
             this.configObjectCreator = configObjectCreator;
+            this.valuesInjector = valuesInjector;
         }
 
         public List<ConfigFile> PrepareConfigs(IConfigsFetcher configsFetcher,
@@ -31,19 +31,8 @@
             var patcher = new ConfigsPatcher(configsFetcher);
             var validator = new ConfigsValidator(configMetas);
 
-            var converters = configurator.Converters;
 
             var result = new List<ConfigFile>();
-            var settings = new JsonSerializerSettings()
-            {
-                Converters = converters
-            };
-
-            foreach (var conv in converters.OfType<IJsonSerializerInitializable>())
-            {
-                conv.Init(settings);
-            }
-
             foreach (var configMeta in configMetas)
             {
                 var key = configMeta.Key;
@@ -58,8 +47,8 @@
                 try
                 {
                     value = patcher.TryPatch(key, value);
-                    JsonConvert.PopulateObject(value, configObject, settings);
-
+                    valuesInjector.InjectTo(configObject, value);
+                    
                     validator.OnConfigPrepared(configMeta, configObject);
                     
                     result.Add(configObject);

@@ -4,7 +4,8 @@
     "references": [
         "GUID:7e11b597e963c3243be9cc0fa07f1367",
         "GUID:cb4d47353c9a9f0469fe7e7c83f00e59",
-        "GUID:f51ebe6a0ceec4240a699833d6309b23"
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "Unibrics.Core"
     ],
     "includePlatforms": [
         "Editor"

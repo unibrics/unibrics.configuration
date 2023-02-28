@@ -28,6 +28,7 @@
             services.Add<IConfigMetaProvider>().ImplementedByInstance(configMetaProvider);
             services.Add<IConfigsRegistry>().ImplementedBy<ConfigsRegistry>().AsSingleton();
             services.Add<IConfigsFactory>().ImplementedBy<ConfigsFactory>().AsSingleton();
+            services.Add<IConfigValuesInjector, IConfigMetadataExtractor>().ImplementedBy<MultiFormatConfigValuesHandler>().AsSingleton();
             services.Add<IAppliedConfigsHolder>().ImplementedBy<AppliedConfigsHolder>().AsSingleton();
             services.Add<IConfigObjectCreator>().ImplementedBy<ConfigObjectResolverCreator>().AsSingleton();
 

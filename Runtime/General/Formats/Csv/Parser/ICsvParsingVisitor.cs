@@ -35,8 +35,11 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
 
         private readonly Type recordType;
 
-        public ConfigCsvParsingVisitor(Type recordType, Action<ICsvRecord> onRecordReady)
+        private readonly bool recycleRecord;
+
+        public ConfigCsvParsingVisitor(Type recordType, bool recycleRecord, Action<ICsvRecord> onRecordReady)
         {
+            this.recycleRecord = recycleRecord;
             this.recordType = recordType;
             this.onRecordReady = onRecordReady;
             properties = recordType.GetProperties().ToList();
@@ -137,7 +140,10 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
             }
 
             onRecordReady?.Invoke(currentObject);
-            currentObject = (ICsvRecord)Activator.CreateInstance(recordType);
+            if (!recycleRecord)
+            {
+                currentObject = (ICsvRecord)Activator.CreateInstance(recordType);
+            }
             index = 0;
         }
         

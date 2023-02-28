@@ -18,7 +18,8 @@ namespace Unibrics.Configuration.General.Formats.Csv
                     $"be filled with values from .csv file");
             }
             
-            var reader = new CsvReader(new ConfigCsvParsingVisitor(csvConfigFile.RecordType, rec => csvConfigFile.Process(rec)));
+            var reader = new CsvReader(new ConfigCsvParsingVisitor(csvConfigFile.RecordType, 
+                csvConfigFile is IRecycleCsvRecord, rec => csvConfigFile.Process(rec)));
             reader.Read(config);
             ExtractMetadataTo(configFile, config);
         }

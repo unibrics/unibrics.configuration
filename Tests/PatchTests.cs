@@ -17,9 +17,9 @@
         [SetUp]
         public void SetUp()
         {
-            factory = new ConfigsFactory(new ActivatorConfigObjectsCreator(), new MultiFormatConfigValuesInjector(new List<IFormattedConfigValuesInjector>()
+            factory = new ConfigsFactory(new ActivatorConfigObjectsCreator(), new MultiFormatConfigValuesHandler(new List<IFormattedConfigValuesHandler>()
             {
-                new JsonConfigsInjector(new ConfigsConfigurator())
+                new JsonConfigsHandler(new ConfigsConfigurator())
             }));
         }
 

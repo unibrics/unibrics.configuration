@@ -38,6 +38,9 @@
         [Inject]
         public IDefaultConfigsFetcher DefaultValuesFetcher { get; set; }
 
+        [Inject]
+        public IConfigMetadataExtractor MetadataExtractor { get; set; }
+
         private readonly IDictionary<string, string> values = new Dictionary<string, string>();
 
         private IConfigsFetcher remoteFetcher;
@@ -86,16 +89,16 @@
                     continue;
                 }
                 
-                var shortConfigData = JsonConvert.DeserializeObject<ConfigFile>(remoteValue);
-                var applyChecker = ConfigApplyCheckerFactory.Create(shortConfigData.Apply, key);
+                var metadata = MetadataExtractor.ExtractMetadata(remoteValue);
+                var applyChecker = ConfigApplyCheckerFactory.Create(metadata.Apply, key);
                 if (applyChecker.ShouldApply())
                 {
                     Logger.Log("Config", $"Config '{key}' is applied from remote value");
                     values[key] = remoteValue;
 
-                    if (shortConfigData.HasActivationEvent)
+                    if (metadata.HasActivationEvent)
                     {
-                        AbTestsReporter.ReportTestActivation(shortConfigData);
+                        AbTestsReporter.ReportTestActivation(metadata);
                     }
 
                     if (applyChecker.ShouldCache())
@@ -105,7 +108,7 @@
                         string cacheUntil = null;
                         if (applyChecker.IsCachePreservedBetweenVersions)
                         {
-                            cacheUntil = shortConfigData.CacheUntil;
+                            cacheUntil = metadata.CacheUntil;
                             Logger.Log("Config", $"Config '{key}' is cached until {cacheUntil}");
                         }
                         
@@ -115,7 +118,7 @@
                 else
                 {
                     Logger.Log("Config",
-                        $"Config '{key}' is fetched from remote but skipped because of '{shortConfigData.Apply}' mode");
+                        $"Config '{key}' is fetched from remote but skipped because of '{metadata.Apply}' mode");
 
                     ApplyLocalValue(key);
                 }

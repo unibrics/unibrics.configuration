@@ -5,13 +5,13 @@ namespace Unibrics.Configuration.General.Formats.Json
     using Newtonsoft.Json;
     using Utils.Json;
 
-    public class JsonConfigsInjector : IFormattedConfigValuesInjector
+    public class JsonConfigsHandler : IFormattedConfigValuesHandler
     {
         public Priority Priority => Priority.High;
 
         private readonly JsonSerializerSettings settings;
 
-        public JsonConfigsInjector(IConfigsConfigurator configurator)
+        public JsonConfigsHandler(IConfigsConfigurator configurator)
         {
             var converters = configurator.Converters;
             settings = new JsonSerializerSettings()
@@ -41,6 +41,11 @@ namespace Unibrics.Configuration.General.Formats.Json
             return false;
         }
         
+        public ConfigFile ExtractMetadata(string raw)
+        {
+            return JsonConvert.DeserializeObject<ConfigFile>(raw);
+        }
+
         public void InjectTo(ConfigFile configFile, string config)
         {
             

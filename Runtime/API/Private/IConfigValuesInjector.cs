@@ -9,18 +9,26 @@ namespace Unibrics.Configuration.General
         void InjectTo(ConfigFile configFile, string config);
     }
 
-    class MultiFormatConfigValuesInjector : IConfigValuesInjector
+    class MultiFormatConfigValuesHandler : IConfigValuesInjector, IConfigMetadataExtractor
     {
-        private readonly List<IFormattedConfigValuesInjector> injectors;
+        private readonly List<IFormattedConfigValuesHandler> handlers;
 
-        public MultiFormatConfigValuesInjector(List<IFormattedConfigValuesInjector> injectors)
+        private IFormattedConfigValuesHandler GetHandlerFor(string raw) =>
+            handlers.First(injector => injector.CanProcess(raw));
+
+        public MultiFormatConfigValuesHandler(List<IFormattedConfigValuesHandler> injectors)
         {
-            this.injectors = injectors.OrderByDescending(injector => injector.Priority).ToList();
+            handlers = injectors.OrderByDescending(injector => injector.Priority).ToList();
         }
 
         public void InjectTo(ConfigFile configFile, string config)
         {
-            injectors.First(injector => injector.CanProcess(config)).InjectTo(configFile, config);
+            GetHandlerFor(config).InjectTo(configFile, config);
+        }
+        
+        public ConfigFile ExtractMetadata(string value)
+        {
+            return GetHandlerFor(value).ExtractMetadata(value);
         }
     }
 

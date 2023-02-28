@@ -17,13 +17,15 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
 
     class ConfigCsvParsingVisitor : ICsvParsingVisitor
     {
+        private enum CsvParsingState { Metadata, Header, Values }
+        
         private readonly List<FieldSetter> headersTemp = new();
 
         private readonly List<PropertyInfo> properties;
 
         private FieldSetter[] headers;
 
-        private bool isParsingHeader = true;
+        private CsvParsingState state = CsvParsingState.Header;
 
         private int index;
 
@@ -43,8 +45,14 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
 
         public void OnCellParsed(string value)
         {
-            if (isParsingHeader)
+            if (state == CsvParsingState.Header)
             {
+                if (value == "metadata:")
+                {
+                    // switch to parsing metadata, it must be already processed, so we're just skipping
+                    state = CsvParsingState.Metadata;
+                    return;
+                }
                 var property = properties.FirstOrDefault(pr =>
                     string.Equals(pr.Name, value, StringComparison.CurrentCultureIgnoreCase));
 
@@ -55,8 +63,16 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
                 });
                 return;
             }
+            
+            if (state == CsvParsingState.Metadata)
+            {
+                if (value == "values:")
+                {
+                    state = CsvParsingState.Header;
+                }
+                return;
+            }
 
-            Debug.Log($"cell : {headers[index]}={value}");
             headers[index].Setter?.Invoke(currentObject, value);
             index++;
 
@@ -105,14 +121,21 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
         
         public void OnLineEnd()
         {
-            Debug.Log($"line end! {currentObject}");
-            if (isParsingHeader)
+            switch (state)
             {
-                isParsingHeader = false;
-                headers = headersTemp.ToArray();
-                return;
+                case CsvParsingState.Metadata:
+                    return;
+                case CsvParsingState.Header:
+                    if (index == 0)
+                    {
+                        // state was just switched from metadata
+                        return;
+                    }
+                    state = CsvParsingState.Values;
+                    headers = headersTemp.ToArray();
+                    return;
             }
-            
+
             onRecordReady?.Invoke(currentObject);
             currentObject = (ICsvRecord)Activator.CreateInstance(recordType);
             index = 0;
@@ -120,7 +143,6 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
         
         public void OnFileEnd()
         {
-            Debug.Log($"file end");
         }
         
         private struct FieldSetter

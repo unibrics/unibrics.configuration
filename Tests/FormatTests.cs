@@ -14,8 +14,7 @@ namespace Unibrics.Configuration.Tests
     {
         private List<ConfigFile> configs;
 
-        [SetUp]
-        public void SetUp()
+        private void Prepare(string rawCsv)
         {
             var resolver = Substitute.For<IResolver>();
             resolver.Resolve(typeof(IJsonConfig)).Returns(new JsonConfig());
@@ -23,16 +22,16 @@ namespace Unibrics.Configuration.Tests
 
             var configurator = new ConfigsConfigurator();
             var configFactory = new ConfigsFactory(new ConfigObjectResolverCreator(resolver), 
-                new MultiFormatConfigValuesInjector(new List<IFormattedConfigValuesInjector>()
-            {
-                new JsonConfigsInjector(configurator), new CsvConfigsInjector()
-            }));
+                new MultiFormatConfigValuesHandler(new List<IFormattedConfigValuesHandler>()
+                {
+                    new JsonConfigsHandler(configurator), new CsvConfigsHandler()
+                }));
             var fetcher = Substitute.For<IConfigsFetcher>();
             var jsonKey = "json_key";
             var csvKey = "csv_key";
             fetcher.GetKeys().Returns(new[] { jsonKey, csvKey});
             fetcher.GetValue(jsonKey).Returns(FilesProvider.ProvideJson());
-            fetcher.GetValue(csvKey).Returns(FilesProvider.ProvideCsv());
+            fetcher.GetValue(csvKey).Returns(rawCsv);
 
             configs = configFactory.PrepareConfigs(fetcher,
                 new List<ConfigMeta>()
@@ -44,10 +43,12 @@ namespace Unibrics.Configuration.Tests
                 });
         }
         
+        
         [Test]
         public void ShouldRead_JsonConfig()
         {
-           var jsonConfig = configs.OfType<JsonConfig>().First();
+            Prepare(FilesProvider.ProvideCsv());
+            var jsonConfig = configs.OfType<JsonConfig>().First();
             Assert.That(jsonConfig.IntValue, Is.EqualTo(12));
             Assert.That(jsonConfig.stringValue, Is.EqualTo("test"));
         }
@@ -55,6 +56,7 @@ namespace Unibrics.Configuration.Tests
         [Test]
         public void ShouldRead_CsvConfig()
         {
+            Prepare(FilesProvider.ProvideCsv());
             var csvConfig = configs.OfType<CsvConfig>().First();
             
             Assert.That(csvConfig.Values.Count, Is.EqualTo(2));
@@ -62,6 +64,16 @@ namespace Unibrics.Configuration.Tests
             Assert.That(csvConfig.Values[0].SampleFloat, Is.EqualTo(2.45f));
             Assert.That(csvConfig.Values[0].SampleString, Is.EqualTo("value"));
             Assert.That(csvConfig.Values[1].SampleString, Is.EqualTo("value2"));
+        }
+
+        [Test]
+        public void ShouldParse_CsvMetadata()
+        {
+            Prepare(FilesProvider.ProvideCsvWithMetadata());
+            var csvConfig = configs.OfType<CsvConfig>().First();
+            
+            Assert.That(csvConfig.AbTestName, Is.EqualTo("test_test"));
+            Assert.That(csvConfig.Apply, Is.EqualTo(ApplyMode.EveryTimeNoCache));
         }
     }
 

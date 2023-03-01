@@ -4,16 +4,7 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using UnityEngine;
-
-    public interface ICsvParsingVisitor
-    {
-        void OnCellParsed(string value);
-        
-        void OnLineEnd();
-
-        void OnFileEnd();
-    }
+    using Core.Utils.Csv;
 
     class ConfigCsvParsingVisitor : ICsvParsingVisitor
     {

@@ -77,7 +77,8 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
                 {
                     return null;
                 }
-                if (propertyInfo.PropertyType == typeof(int))
+                var propertyType = propertyInfo.PropertyType;
+                if (propertyType == typeof(int))
                 {
                     return (obj, val) =>
                     {
@@ -91,7 +92,7 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
                         }
                     };
                 }
-                if (propertyInfo.PropertyType == typeof(float))
+                if (propertyType == typeof(float))
                 {
                     return (obj, val) =>
                     {
@@ -105,12 +106,28 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
                         }
                     };
                 }
-                if (propertyInfo.PropertyType == typeof(string))
+                if (propertyType == typeof(string))
                 {
                     return propertyInfo.SetValue;
                 }
+                if (propertyType == typeof(List<string>))
+                {
+                    return (obj, val) =>
+                    {
+                        var list = propertyInfo.GetValue(obj) as List<string>;
+                        if (list == null)
+                        {
+                            list = new List<string>() { val };
+                            propertyInfo.SetValue(obj, list);
+                        }
+                        else
+                        {
+                            list.Add(val);
+                        }
+                    };
+                }
 
-                throw new Exception($"Type {propertyInfo.PropertyType} is not supported for .csv fields currently");
+                throw new Exception($"Type {propertyType} is not supported for .csv fields currently");
             }
         }
         

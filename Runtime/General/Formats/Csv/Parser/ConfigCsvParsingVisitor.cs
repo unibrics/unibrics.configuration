@@ -2,6 +2,7 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Reflection;
     using Core.Utils.Csv;
@@ -9,7 +10,7 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
     class ConfigCsvParsingVisitor : ICsvParsingVisitor
     {
         private enum CsvParsingState { Metadata, Header, Values }
-        
+
         private readonly List<FieldSetter> headersTemp = new();
 
         private readonly List<PropertyInfo> properties;
@@ -58,7 +59,7 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
                 index++;
                 return;
             }
-            
+
             if (state == CsvParsingState.Metadata)
             {
                 if (value == "values:")
@@ -96,7 +97,7 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
                 {
                     return (obj, val) =>
                     {
-                        if (float.TryParse(val, out var floatValue))
+                        if (float.TryParse(val, NumberStyles.Float, CultureInfo.InvariantCulture, out var floatValue))
                         {
                             propertyInfo.SetValue(obj, floatValue);
                         }
@@ -130,7 +131,7 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
                 throw new Exception($"Type {propertyType} is not supported for .csv fields currently");
             }
         }
-        
+
         public void OnLineEnd()
         {
             switch (state)
@@ -157,15 +158,15 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
             }
             index = 0;
         }
-        
+
         public void OnFileEnd()
         {
         }
-        
+
         private struct FieldSetter
         {
             public string Name { get; set; }
-            
+
             public Action<object, string> Setter { get; set; }
         }
     }

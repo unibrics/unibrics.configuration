@@ -62,6 +62,36 @@
             remoteFetcher.StartFetching(fetchLimitTime);
         }
 
+        private IEnumerable<string> GetAllConfigKeys(string version)
+        {
+            var set = new HashSet<string>();
+            foreach (var key in AppliedConfigsHolder.GetKeysByPrefixAndVersion(PatchPrefix, version).ToList())
+            {
+                set.Add(key);
+            }
+
+            var remoteKeys = remoteFetcher.GetKeys().ToList();
+            foreach (var key in remoteKeys.Where(key => key.StartsWith(PatchPrefix)).ToList())
+            {
+                set.Add(key);
+            }
+
+            foreach (var key in DefaultValuesFetcher.GetKeys())
+            {
+                set.Add(key);
+            }
+
+            foreach (var meta in ConfigMetaProvider.FetchMetas())
+            {
+                if (!meta.IsMultiConfig)
+                {
+                    set.Add(meta.Key);
+                }
+            }
+
+            return set;
+        }
+
         public async UniTask StopFetchingAndApply()
         {
             await DefaultValuesFetcher.StopFetchingAndApply();
@@ -69,10 +99,7 @@
             await remoteFetcher.StopFetchingAndApply();
             var remoteKeys = remoteFetcher.GetKeys().ToList();
             var version = VersionProvider.FullVersion;
-            var keys = ConfigMetaProvider.FetchMetas().Select(meta => meta.Key)
-                .Concat(AppliedConfigsHolder.GetKeysByPrefixAndVersion(PatchPrefix, version).ToList())
-                .Concat(remoteKeys.Where(key => key.StartsWith(PatchPrefix)).ToList())
-                .Distinct();
+            var keys = GetAllConfigKeys(version);
             
             foreach (var key in keys)
             {

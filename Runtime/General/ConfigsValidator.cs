@@ -32,7 +32,7 @@
         {
             foreach (var meta in metas)
             {
-                if (!preparedObjects.ContainsKey(meta))
+                if (!meta.IsMultiConfig && !preparedObjects.ContainsKey(meta))
                 {
                     throw new Exception(
                         $"Config '{meta.Key}' is discovered, but no config file found. " +

@@ -7,6 +7,7 @@
     using Cysharp.Threading.Tasks;
     using General;
     using General.Formats.Json;
+    using General.Multi;
     using NUnit.Framework;
 
     [TestFixture]
@@ -103,6 +104,11 @@
             public ConfigFile CreateObject(ConfigMeta meta)
             {
                 return (ConfigFile)Activator.CreateInstance(meta.ImplementationType);
+            }
+
+            public MultiConfig CreateMultiConfigFor(ConfigMeta meta)
+            {
+                throw new NotImplementedException();
             }
         }
     }

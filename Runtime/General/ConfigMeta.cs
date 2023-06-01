@@ -12,6 +12,7 @@
         
         public bool LocalOnly { get; set; }
 
+        public bool IsMultiConfig { get; set; }
     }
 
 }

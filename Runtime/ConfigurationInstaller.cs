@@ -1,6 +1,7 @@
 ﻿namespace Unibrics.Configuration
 {
     using System;
+    using System.Linq;
     using Core;
     using Core.Services;
     using General;
@@ -9,6 +10,7 @@
     using General.Fetch;
     using General.Formats.Csv;
     using General.Formats.Json;
+    using General.Multi;
     using ResourcesService;
     using Saves.General.Fetch;
     using UnityEngine;
@@ -43,9 +45,15 @@
             services.Add<IABTestsReporter>().ImplementedBy<LogAbTestsReporter>().AsSingleton();
             
             var metas = configMetaProvider.FetchMetas();
-            foreach (var meta in metas)
+            foreach (var meta in metas.Where(m => !m.IsMultiConfig))
             {
                 services.Add(meta.InterfaceType).ImplementedBy(meta.ImplementationType).AsSingleton();
+            }
+
+            foreach (var meta in metas.Where(m => m.IsMultiConfig))
+            {
+                services.Add(typeof(IMultiConfig<>).MakeGenericType(meta.InterfaceType))
+                    .ImplementedBy(typeof(MultiConfig<>).MakeGenericType(meta.InterfaceType)).AsSingleton();
             }
         }
     }

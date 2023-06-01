@@ -11,6 +11,8 @@
         public Type ImplementedBy { get; }
         
         public bool LocalOnly { get; set; }
+        
+        public bool IsMultiConfig { get; set; }
 
         public ConfigAttribute(string key, Type implementedBy)
         {

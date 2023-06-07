@@ -6,6 +6,8 @@
     using Configuration.General.Application;
     using Configuration.General.Fetch;
     using Core.Version;
+    using Newtonsoft.Json;
+    using UnityEngine;
 
     class AppliedConfigsHolder : IAppliedConfigsHolder
     {
@@ -50,7 +52,7 @@
                 }
                 
                 return false;
-            })?.Value;
+            })?.GetValue();
         }
 
         public void Store(string key, string value, string version, string limitVersion)
@@ -101,17 +103,21 @@
         public string Version { get; }
         
         public string Key { get;  }
-        
+
         public string Value { get; }
         
         public string CacheUntilVersion { get; }
+
+        private const string LineBreak = "<BR>";
 
         public AppliedConfigData(string version, string key, string value, string cacheUntilVersion)
         {
             Version = version;
             Key = key;
-            Value = value;
+            Value = value?.Replace("\n", LineBreak);
             CacheUntilVersion = cacheUntilVersion;
         }
+
+        public string GetValue() => Value?.Replace(LineBreak, "\n");
     }
 }

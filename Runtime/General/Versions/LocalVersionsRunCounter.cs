@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Core.Version;
+    using Newtonsoft.Json;
     using UnityEngine;
     using Utils.Json;
 
@@ -39,7 +40,8 @@
         public void TrackRun()
         {
             counter.Track(versionProvider.FullVersion);
-            PlayerPrefs.SetString(Key, serializer.Serialize(counter));
+            var serialized = serializer.Serialize(counter);
+            PlayerPrefs.SetString(Key, serialized);
         }
 
         public int GetTotalRunsOfCurrentVersion()
@@ -54,6 +56,7 @@
 
         class RunsCounter
         {
+            [JsonProperty]
             private readonly Dictionary<string, int> runs = new();
 
             public void Track(string version)

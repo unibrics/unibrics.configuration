@@ -7,15 +7,22 @@
 
     class LocalAppliedConfigsSaver : IAppliedConfigsSaver
     {
-        private IJsonSerializer serializer;
+        private readonly IJsonSerializer serializer;
 
         private const string Key = "applied.configs";
-        
+
+        public LocalAppliedConfigsSaver(IJsonSerializer serializer)
+        {
+            this.serializer = serializer;
+        }
+
         public List<AppliedConfigData> Load()
         {
             if (PlayerPrefs.HasKey(Key))
             {
-                return serializer.Deserialize<ConfigsWrapper>(PlayerPrefs.GetString(Key)).Configs;
+                var raw = PlayerPrefs.GetString(Key);
+                var configs = serializer.Deserialize<ConfigsWrapper>(raw).Configs;
+                return configs;
             }
 
             return new List<AppliedConfigData>();

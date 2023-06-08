@@ -2,6 +2,7 @@ namespace Unibrics.Configuration.General.Multi
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     abstract class MultiConfig
     {
@@ -24,6 +25,11 @@ namespace Unibrics.Configuration.General.Multi
 
         public IEnumerable<TConfig> GetAll() => configs.Values;
         
+        public IEnumerable<(string key, TConfig value)> GetAllWithKeys()
+        {
+            return configs.Select(config => (config.Key, config.Value));
+        }
+
         internal override void Add(string key, ConfigFile config)
         {
             if (config is not TConfig typedConfig)

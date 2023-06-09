@@ -71,7 +71,7 @@
             }
 
             var remoteKeys = remoteFetcher.GetKeys().ToList();
-            foreach (var key in remoteKeys.Where(key => key.StartsWith(PatchPrefix)).ToList())
+            foreach (var key in remoteKeys.ToList())
             {
                 set.Add(key);
             }

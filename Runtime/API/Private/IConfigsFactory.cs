@@ -38,9 +38,11 @@
                 {
                     var prefix = configMeta.Key;
                     var prefixedKeys = keys.Where(key => key.StartsWith(prefix)).ToList();
-                    if (!prefixedKeys.Any())
+                    if (!prefixedKeys.Any() && !configMeta.IsOptional)
                     {
-                        throw new Exception($"Can not find any config prefixed with '{prefix}' to create MultiConfig of {configMeta.InterfaceType}");
+                        throw new Exception($"Can not find any config prefixed with '{prefix}'" +
+                            $" to create MultiConfig of {configMeta.InterfaceType}. Add config file or mark it with IsOptional" +
+                            $"property");
                     }
                     
                     var multiObject = configObjectCreator.CreateMultiConfigFor(configMeta);

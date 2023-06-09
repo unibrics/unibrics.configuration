@@ -36,7 +36,8 @@
                     ImplementationType = attr.ImplementedBy,
                     InterfaceType = type,
                     LocalOnly = attr.LocalOnly,
-                    IsMultiConfig = attr.IsMultiConfig
+                    IsMultiConfig = attr.IsMultiConfig,
+                    IsOptional = attr.IsOptional
                 });
             }
 

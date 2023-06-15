@@ -45,8 +45,6 @@
 
         private IConfigsFetcher remoteFetcher;
         
-        private const string PatchPrefix = "patch_";
-
         public void StartFetching(TimeSpan fetchLimitTime)
         {
             if (Configurator.RemoteFetcher != null && !FeatureSet.GetFeature<RemoteConfigsFeature>().IsSuspended)
@@ -65,7 +63,7 @@
         private IEnumerable<string> GetAllConfigKeys(string version)
         {
             var set = new HashSet<string>();
-            foreach (var key in AppliedConfigsHolder.GetKeysByPrefixAndVersion(PatchPrefix, version).ToList())
+            foreach (var key in AppliedConfigsHolder.GetKeysByVersion(version).ToList())
             {
                 set.Add(key);
             }

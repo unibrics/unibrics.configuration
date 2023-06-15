@@ -66,9 +66,9 @@
             configsSaver.Save(Configs);
         }
 
-        public IEnumerable<string> GetKeysByPrefixAndVersion(string prefix, string version)
+        public IEnumerable<string> GetKeysByVersion(string version)
         {
-            return Configs.Where(data => data.Version == version).Select(data => data.Key).Where(key => key.StartsWith(prefix));
+            return Configs.Where(data => data.Version == version).Select(data => data.Key);
         }
         
         //clean up save from cached configs from older version

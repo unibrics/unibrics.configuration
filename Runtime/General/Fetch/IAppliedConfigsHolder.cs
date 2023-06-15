@@ -12,7 +12,7 @@
 
         void Store(string key, string value, string currentVersion, string limitVersion);
 
-        IEnumerable<string> GetKeysByPrefixAndVersion(string prefix, string version);
+        IEnumerable<string> GetKeysByVersion(string version);
     }
 
    

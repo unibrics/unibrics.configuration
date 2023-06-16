@@ -68,7 +68,23 @@
 
         public IEnumerable<string> GetKeysByVersion(string version)
         {
-            return Configs.Where(data => data.Version == version).Select(data => data.Key);
+            foreach (var config in Configs)
+            {
+                if (config.Version == version)
+                {
+                    yield return config.Key;
+                }
+
+                if (config.CacheUntilVersion == null)
+                {
+                    continue;
+                }
+
+                if (new Version(config.CacheUntilVersion) > new Version(version))
+                {
+                    yield return config.Key;
+                }
+            }
         }
         
         //clean up save from cached configs from older version

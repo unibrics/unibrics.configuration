@@ -25,7 +25,7 @@
         }
 
         public List<ConfigFile> PrepareConfigs(IConfigsFetcher configsFetcher,
-            List<ConfigMeta> configMetas)
+            List<ConfigMeta> configMetas) 
         {
             var keys = configsFetcher.GetKeys().ToList();
             var patcher = new ConfigsPatcher(configsFetcher);

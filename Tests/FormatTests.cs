@@ -93,17 +93,7 @@ namespace Unibrics.Configuration.Tests
         public string stringValue { get; set; }
     }
 
-    [Config("csv_config", typeof(CsvConfig))]
-    public interface ICsvConfig
-    {
-        int SampleInt { get; }
-        
-        int SampleFloat { get; }
-        
-        int SampleString { get; }
-    }
-
-    public class CsvConfig : TableConfigFile<CsvConfig.CsvRecord>
+    public class CsvConfig : TableConfigFile<CsvConfig.CsvRecord>, ICsvConfig
     {
         public struct CsvRecord : ICsvRecord
         {
@@ -117,5 +107,11 @@ namespace Unibrics.Configuration.Tests
                 return $"{nameof(SampleInt)}: {SampleInt}, {nameof(SampleFloat)}: {SampleFloat}, {nameof(SampleString)}: {SampleString}";
             }
         }
+
+        public int SampleInt { get; set; }
+
+        public int SampleFloat { get; set; }
+
+        public int SampleString { get; set; }
     }
 }

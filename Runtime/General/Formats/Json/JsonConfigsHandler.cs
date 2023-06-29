@@ -5,7 +5,7 @@ namespace Unibrics.Configuration.General.Formats.Json
     using Newtonsoft.Json;
     using Utils.Json;
 
-    public class JsonConfigsHandler : IFormattedConfigValuesHandler
+    public class JsonConfigsHandler : ISingleFormatConfigValuesHandler
     {
         public Priority Priority => Priority.High;
 

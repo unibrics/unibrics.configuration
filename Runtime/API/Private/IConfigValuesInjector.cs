@@ -23,7 +23,8 @@ namespace Unibrics.Configuration.General
 
         public void InjectTo(ConfigFile configFile, string config)
         {
-            GetHandlerFor(config).InjectTo(configFile, config);
+            var formattedConfigValuesHandler = GetHandlerFor(config);
+            formattedConfigValuesHandler.InjectTo(configFile, config);
         }
         
         public ConfigFile ExtractMetadata(string value)

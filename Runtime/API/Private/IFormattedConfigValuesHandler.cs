@@ -10,4 +10,5 @@ namespace Unibrics.Configuration.General
 
         ConfigFile ExtractMetadata(string raw);
     }
+
 }

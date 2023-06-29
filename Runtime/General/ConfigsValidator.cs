@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using UnityEngine;
 
     public class ConfigsValidator
     {
@@ -22,6 +23,8 @@
             }
             else
             {
+                Debug.Log($"sefkeokfk");
+                Debug.Log(configObject.GetType());
                 throw new Exception($"Configuration file for config {configMeta.Key} ({configMeta.ImplementationType.Name}) " +
                                     $"must be a inheritor of {nameof(ConfigFile)} class to work correctly with A/B tests");
             }

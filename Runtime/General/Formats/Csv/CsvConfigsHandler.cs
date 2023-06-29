@@ -7,7 +7,7 @@ namespace Unibrics.Configuration.General.Formats.Csv
     using Parser;
     using UnityEngine;
 
-    public class CsvConfigsHandler : IFormattedConfigValuesHandler
+    public class CsvConfigsHandler : ISingleFormatConfigValuesHandler
     {
         public Priority Priority => Priority.Lowest;
 

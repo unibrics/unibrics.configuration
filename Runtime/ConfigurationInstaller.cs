@@ -7,6 +7,7 @@
     using General;
     using General.ABTests;
     using General.Application;
+    using General.Compound;
     using General.Fetch;
     using General.Formats.Csv;
     using General.Formats.Json;
@@ -36,8 +37,9 @@
             services.Add<IAppliedConfigsHolder>().ImplementedBy<AppliedConfigsHolder>().AsSingleton();
             services.Add<IConfigObjectCreator>().ImplementedBy<ConfigObjectResolverCreator>().AsSingleton();
             
-            services.Add<IFormattedConfigValuesHandler>().ImplementedBy<JsonConfigsHandler>().AsSingleton();
-            services.Add<IFormattedConfigValuesHandler>().ImplementedBy<CsvConfigsHandler>().AsSingleton();
+            services.Add<IFormattedConfigValuesHandler, ISingleFormatConfigValuesHandler>().ImplementedBy<JsonConfigsHandler>().AsSingleton();
+            services.Add<IFormattedConfigValuesHandler, ISingleFormatConfigValuesHandler>().ImplementedBy<CsvConfigsHandler>().AsSingleton();
+            services.Add<IFormattedConfigValuesHandler>().ImplementedBy<CompoundConfigsHandler>().AsSingleton();
             
             // this is potentially rebindable part
             services.Add<IVersionRunsCounter>().ImplementedBy<LocalVersionsRunCounter>().AsSingleton();

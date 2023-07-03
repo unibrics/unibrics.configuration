@@ -1,7 +1,7 @@
 {
   "name": "unibrics.configuration",
   "displayName": "Unibrics Configuration",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "unity": "2021.1",
   "description": "Json and CSV configuration from local and remote sources support",
   "dependencies": {

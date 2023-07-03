@@ -14,6 +14,7 @@
     using General.Multi;
     using ResourcesService;
     using Saves.General.Fetch;
+    using Settings;
     using UnityEngine;
 
     [Install]
@@ -24,9 +25,11 @@
         public override void Install(IServicesRegistry services)
         {
             var configMetaProvider = new ConfigMetaProvider();
+
+            var timeout = AppSettings.Get<ConfigurationSettings>().TimeoutSeconds;
             
             services.Add<IConfigsFetcher>().ImplementedBy<CombinedConfigsFetcher>().AsSingleton();
-            services.Add<IConfigFetchTimeoutProvider>().ImplementedByInstance(new PredefinedConfigFetchTimeoutProvider(TimeSpan.FromSeconds(5)));
+            services.Add<IConfigFetchTimeoutProvider>().ImplementedByInstance(new PredefinedConfigFetchTimeoutProvider(TimeSpan.FromSeconds(timeout)));
             services.Add<IDefaultConfigsFetcher>().ImplementedBy<LocalResourcesFetcher>().AsSingleton();
             services.Add<IConfigsConfigurator>().ImplementedBy<ConfigsConfigurator>().AsSingleton();
             services.Add<IConfigApplyCheckerFactory>().ImplementedBy<ConfigApplyCheckerFactory>().AsSingleton();

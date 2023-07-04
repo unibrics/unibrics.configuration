@@ -107,7 +107,9 @@ namespace Unibrics.Configuration.General.Compound
 
         public bool CanProcess(string value)
         {
-            return IsSectionHeader(new StringReader(value).ReadLine());
+            var reader = new StringReader(value);
+            var firstLine = metadataExtractor.SkipMetadata(reader);
+            return IsSectionHeader(firstLine);
         }
 
         private bool IsSectionHeader(string raw)

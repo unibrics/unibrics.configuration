@@ -6,6 +6,7 @@ namespace Unibrics.Configuration.General.Compound
     using System.Linq;
     using System.Text;
     using Core;
+    using Formats;
     using UnityEngine;
 
     public class CompoundConfigsHandler : IFormattedConfigValuesHandler
@@ -15,6 +16,8 @@ namespace Unibrics.Configuration.General.Compound
         private readonly List<ISingleFormatConfigValuesHandler> handlers;
 
         private const string SectionPrefix = "section.";
+        
+        private readonly PlainMetadataExtractor metadataExtractor = new();
 
         internal CompoundConfigsHandler(List<ISingleFormatConfigValuesHandler> handlers)
         {
@@ -29,6 +32,8 @@ namespace Unibrics.Configuration.General.Compound
                     $"class {configFile.GetType().Name} should be inherited from CompoundConfig in order " +
                     $"to be processed as compound");
             }
+            
+            metadataExtractor.ExtractMetadataTo(configFile, config);
             var sections = ParseSections(config);
             var properties = configFile.GetType().GetProperties();
             foreach (var (fieldName, configRaw) in sections)
@@ -64,12 +69,12 @@ namespace Unibrics.Configuration.General.Compound
             var reader = new StringReader(raw);
 
             var sb = new StringBuilder();
-            var next = reader.ReadLine();
+            var next = metadataExtractor.SkipMetadata(reader);
             var sections = new Dictionary<string, string>();
 
             if (!IsSectionHeader(next))
             {
-                // what?
+                // todo: add validator for corrupted files
             }
 
             var currentSection = ParseSectionHeader(next);
@@ -117,7 +122,9 @@ namespace Unibrics.Configuration.General.Compound
 
         public ConfigFile ExtractMetadata(string raw)
         {
-            throw new System.NotImplementedException();
+            var metadata = new ConfigFile();
+            metadataExtractor.ExtractMetadataTo(metadata, raw);
+            return metadata;
         }
     }
 }

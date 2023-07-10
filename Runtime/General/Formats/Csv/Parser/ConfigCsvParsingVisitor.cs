@@ -127,6 +127,21 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
                         }
                     };
                 }
+                if (propertyType.IsEnum)
+                {
+                    return (obj, val) =>
+                    {
+                        if (Enum.TryParse(propertyType, val, out var parsed))
+                        {
+                            propertyInfo.SetValue(obj, parsed);
+                        }
+                        else
+                        {
+                            throw new Exception($"Can not set enum value {val} to enum of type {propertyType}. " +
+                                $"Variants are: {string.Join(",", Enum.GetValues(propertyType))}");
+                        }
+                    };
+                }
 
                 throw new Exception($"Type {propertyType} is not supported for .csv fields currently");
             }

@@ -111,6 +111,10 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
                 {
                     return propertyInfo.SetValue;
                 }
+                if (propertyType == typeof(bool))
+                {
+                    return (obj, val) => propertyInfo.SetValue(obj, val.ToLower() == "true");
+                }
                 if (propertyType == typeof(List<string>))
                 {
                     return (obj, val) =>

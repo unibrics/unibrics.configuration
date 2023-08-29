@@ -33,7 +33,7 @@
         public IVersionProvider VersionProvider { get; set; }
 
         [Inject]
-        public IABTestsReporter AbTestsReporter { get; set; }
+        public List<IABTestsReporter> AbTestsReporters { get; set; }
 
         [Inject]
         public IDefaultConfigsFetcher DefaultValuesFetcher { get; set; }
@@ -123,7 +123,7 @@
 
                     if (metadata.HasActivationEvent)
                     {
-                        AbTestsReporter.ReportTestActivation(metadata);
+                        AbTestsReporters.ForEach(reporter => reporter.ReportTestActivation(metadata));;
                     }
 
                     if (applyChecker.ShouldCache())

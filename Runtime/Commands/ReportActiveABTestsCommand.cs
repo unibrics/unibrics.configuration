@@ -10,7 +10,7 @@
     public class ReportActiveAbTestsCommand : ExecutableCommand
     {
         [Inject]
-        public IABTestsReporter TestsReporter { get; set; }
+        public List<IABTestsReporter> TestsReporters { get; set; }
 
         [Inject]
         IConfigsRegistry ConfigsRegistry { get; set; }
@@ -28,7 +28,7 @@
                 args[variant] = name;
             }
 
-            TestsReporter.ReportActiveTests(args);
+            TestsReporters.ForEach(reporter => reporter.ReportActiveTests(args));;
         }
     }
 }

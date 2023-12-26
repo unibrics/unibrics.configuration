@@ -6,6 +6,7 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
     using System.Linq;
     using System.Reflection;
     using Core.Utils.Csv;
+    using UnityEngine;
 
     class ConfigCsvParsingVisitor : ICsvParsingVisitor
     {
@@ -81,6 +82,7 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
                 var propertyType = propertyInfo.PropertyType;
                 if (propertyType == typeof(int))
                 {
+                    Debug.Log($"returning int setter");
                     return (obj, val) =>
                     {
                         if (int.TryParse(val, out var intValue))
@@ -95,6 +97,7 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
                 }
                 if (propertyType == typeof(float))
                 {
+                    Debug.Log($"returning float setter");
                     return (obj, val) =>
                     {
                         if (float.TryParse(val, NumberStyles.Float, CultureInfo.InvariantCulture, out var floatValue))
@@ -109,14 +112,17 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
                 }
                 if (propertyType == typeof(string))
                 {
+                    Debug.Log($"returning string setter");
                     return propertyInfo.SetValue;
                 }
                 if (propertyType == typeof(bool))
                 {
+                    Debug.Log($"returning bool setter");
                     return (obj, val) => propertyInfo.SetValue(obj, val.ToLower() == "true");
                 }
                 if (propertyType == typeof(List<string>))
                 {
+                    Debug.Log($"returning list<string> setter");
                     return (obj, val) =>
                     {
                         var list = propertyInfo.GetValue(obj) as List<string>;
@@ -133,6 +139,7 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
                 }
                 if (propertyType.IsEnum)
                 {
+                    Debug.Log($"returning enum setter");
                     return (obj, val) =>
                     {
                         if (Enum.TryParse(propertyType, val, out var parsed))
@@ -170,6 +177,7 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
                     return;
             }
 
+            Debug.Log($"record ready! {currentObject}");
             onRecordReady?.Invoke(currentObject);
             if (!recycleRecord)
             {

@@ -41,6 +41,7 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
 
         public void OnCellParsed(string value)
         {
+            Debug.Log($"On Cell parsed {value} {state}");
             if (state == CsvParsingState.Header)
             {
                 if (value == "metadata:")
@@ -70,13 +71,16 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
                 return;
             }
 
-            headers[index].Setter?.Invoke(currentObject, value);
+            var setter = headers[index].Setter;
+            Debug.Log($"setter: {setter}");
+            setter?.Invoke(currentObject, value);
             index++;
 
             Action<object, string> GetSetterFor(PropertyInfo propertyInfo)
             {
                 if (propertyInfo == null)
                 {
+                    Debug.Log($"propertyinfo is null, returning");
                     return null;
                 }
                 var propertyType = propertyInfo.PropertyType;

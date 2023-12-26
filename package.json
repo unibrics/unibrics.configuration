@@ -5,7 +5,7 @@
   "unity": "2021.1",
   "description": "Json and CSV configuration from local and remote sources support",
   "dependencies": {
-    "unibrics.core": "0.1.4"
+    "unibrics.core": "0.1.5"
   },
   "keywords": [
     "unibrics"

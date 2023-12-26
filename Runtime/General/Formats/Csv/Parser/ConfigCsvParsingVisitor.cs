@@ -49,7 +49,7 @@ namespace Unibrics.Configuration.General.Formats.Csv.Parser
                     return;
                 }
                 var property = properties.FirstOrDefault(pr =>
-                    string.Equals(pr.Name, value, StringComparison.CurrentCultureIgnoreCase));
+                    string.Equals(pr.Name, value, StringComparison.InvariantCultureIgnoreCase));
 
                 headersTemp.Add(new FieldSetter()
                 {

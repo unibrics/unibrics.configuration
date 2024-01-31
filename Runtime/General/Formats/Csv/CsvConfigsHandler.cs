@@ -13,7 +13,6 @@ namespace Unibrics.Configuration.General.Formats.Csv
 
         private readonly PlainMetadataExtractor metadataExtractor = new();
 
-        private const string Delimiter = "<br>";
 
         public void InjectTo(ConfigFile configFile, string config)
         {
@@ -23,7 +22,6 @@ namespace Unibrics.Configuration.General.Formats.Csv
                     $"be filled with values from .csv file");
             }
 
-            config = config.Replace(Delimiter, "\n");
             var reader = new CsvReader(new ConfigCsvParsingVisitor(csvConfigFile.RecordType, 
                 csvConfigFile is IRecycleCsvRecord, rec => csvConfigFile.Process(rec)));
             reader.Read(config);

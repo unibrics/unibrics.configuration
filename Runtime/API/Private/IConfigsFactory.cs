@@ -18,6 +18,8 @@
 
         private readonly IConfigValuesInjector valuesInjector;
         
+        private const string Delimiter = "<br>";
+        
         public ConfigsFactory(IConfigObjectCreator configObjectCreator, IConfigValuesInjector valuesInjector)
         {
             this.configObjectCreator = configObjectCreator;
@@ -71,7 +73,7 @@
                     var value = configsFetcher.GetValue(key);
                     try
                     {
-                        
+                        value = value.Replace(Delimiter, "\n");
                         var configObject = configObjectCreator.CreateObject(configMeta);
                         value = patcher.TryPatch(key, value);
                         valuesInjector.InjectTo(configObject, value);

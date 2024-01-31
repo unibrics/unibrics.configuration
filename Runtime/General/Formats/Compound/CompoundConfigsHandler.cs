@@ -17,8 +17,6 @@ namespace Unibrics.Configuration.General.Compound
 
         private const string SectionPrefix = "section.";
         
-        private const string Delimiter = "<br>";
-        
         private readonly PlainMetadataExtractor metadataExtractor = new();
 
         internal CompoundConfigsHandler(List<ISingleFormatConfigValuesHandler> handlers)
@@ -35,7 +33,6 @@ namespace Unibrics.Configuration.General.Compound
                     $"to be processed as compound");
             } 
             
-            config = config.Replace(Delimiter, "\n");
             metadataExtractor.ExtractMetadataTo(configFile, config);
             var sections = ParseSections(config);
             var properties = configFile.GetType().GetProperties();

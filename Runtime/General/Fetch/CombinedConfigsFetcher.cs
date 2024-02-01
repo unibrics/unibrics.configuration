@@ -118,7 +118,7 @@
                 var applyChecker = ConfigApplyCheckerFactory.Create(metadata.Apply, key);
                 if (applyChecker.ShouldApply())
                 {
-                    Logger.Log("Config", $"Config '{key}' is applied from remote value");
+                    Logger.Log("Config", $"Config '{key}' is applied from remote value</color> \n\n{remoteValue}");
                     values[key] = remoteValue;
 
                     if (metadata.HasActivationEvent)
@@ -154,7 +154,7 @@
                 var appliedConfig = AppliedConfigsHolder.TryGetAppliedConfigFor(key, version);
                 if (appliedConfig != null)
                 {
-                    Logger.Log("Config", $"Config '{key}' is taken from cache\n<color=black>{appliedConfig}</color>");
+                    Logger.Log("Config", $"Config '{key}' is taken from cache</color> \n\n{appliedConfig}");
                     values[key] = appliedConfig;
                     return;
                 }
@@ -166,7 +166,7 @@
                 }
                 
                 appliedConfig = DefaultValuesFetcher.GetValue(key);
-                Logger.Log("Config", $"Config '{key}' is taken from local value\n<color=black>{appliedConfig}</color>");
+                Logger.Log("Config", $"Config '{key}' is taken from local value</color> \n\n{appliedConfig}");
                 if (appliedConfig != null)
                 {
                     values[key] = appliedConfig;

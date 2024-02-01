@@ -154,7 +154,7 @@
                 var appliedConfig = AppliedConfigsHolder.TryGetAppliedConfigFor(key, version);
                 if (appliedConfig != null)
                 {
-                    Logger.Log("Config", $"Config '{key}' is taken from cache");
+                    Logger.Log("Config", $"Config '{key}' is taken from cache\n<color=black>{appliedConfig}</color>");
                     values[key] = appliedConfig;
                     return;
                 }
@@ -166,6 +166,7 @@
                 }
                 
                 appliedConfig = DefaultValuesFetcher.GetValue(key);
+                Logger.Log("Config", $"Config '{key}' is taken from local value\n<color=black>{appliedConfig}</color>");
                 if (appliedConfig != null)
                 {
                     values[key] = appliedConfig;
